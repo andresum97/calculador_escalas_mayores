@@ -4,10 +4,11 @@
 NOTAS = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']
 
 FORMULA = [2,2,1,2,2,2,1]
-ACORDESF = [0,4,7]
-ACORDESM = [0,3,7]
-ACORDESD = [0,3,6]
-ACORDESA = [0,4,8]
+ACORDESF = [0,2,4]
+ACORDESMAYOR = [4,7]
+ACORDESMENOR = [3,7]
+ACORDESDIS = [3,6]
+ACORDESAUM = [4,8]
 
 
 def calculoEscala(nota):
@@ -23,51 +24,52 @@ def calculoEscala(nota):
     return resultado
 
 
-def calculoAcordesMayores(notas):
+def calculoAcordes(notas):
     for nota in notas:
-        indice = NOTAS.index(nota)
+        indice = notas.index(nota)
         resultado = []
         indice_escala = 0
         for cont in ACORDESF:
             indice_escala = indice + cont
-        
-            resultado.append(NOTAS[indice_escala%12])
-        
-        print("Acorde de ",nota," : ",resultado)
+            # print("indice escala",indice_escala)
+            resultado.append(notas[indice_escala%7])
 
-def calculoAcordesMenores(notas):
-    for nota in notas:
-        indice = NOTAS.index(nota)
-        resultado = []
-        indice_escala = 0
-        for cont in ACORDESM:
-            indice_escala = indice + cont
-            resultado.append(NOTAS[indice_escala%12])
-        
-        print("Acorde de ",nota,"m : ",resultado)
+        # print("Primer resultado",resultado)
+        indice_raiz = NOTAS.index(resultado[0])
+        # indice_tercera1 = NOTAS.index(resultado[1])
+        # indice_tercera2 = NOTAS.index(resultado[2])
 
-def calculoAcordesDisminuidas(notas):
-    for nota in notas:
-        indice = NOTAS.index(nota)
-        resultado = []
-        indice_escala = 0
-        for cont in ACORDESD:
-            indice_escala = indice + cont
-            resultado.append(NOTAS[indice_escala%12])
-        
-        print("Acorde de ",nota,"dim : ",resultado)
 
-def calculoAcordesAumentados(notas):
-    for nota in notas:
-        indice = NOTAS.index(nota)
-        resultado = []
-        indice_escala = 0
-        for cont in ACORDESA:
-            indice_escala = indice + cont
-            resultado.append(NOTAS[indice_escala%12])
-        
-        print("Acorde de ",nota,"aug : ",resultado)
+        indice_tercera1 = -1
+        indice_tercera2 = -1
+        cont = indice_raiz
+        while indice_tercera1 == -1 or indice_tercera2 == -1:
+            i = cont % 12
+            if resultado[1] == NOTAS[i]:
+                indice_tercera1 = cont
+            if resultado[2] == NOTAS[i]:
+                indice_tercera2 = cont
+            cont += 1
 
+        # print("indices",indice_raiz," ,",indice_tercera1," ,",indice_tercera2," ,")
+
+        primer_tercera = indice_tercera1 - indice_raiz
+        segunda_tercera = indice_tercera2 - indice_raiz
+
+        temp = [primer_tercera,segunda_tercera]
+        tipo = ""
+        # print("temp",temp)
+        if temp == ACORDESMAYOR:
+            tipo = "mayor"
+        elif temp == ACORDESMENOR:
+            tipo = "menor"
+        elif temp == ACORDESDIS:
+            tipo = "disminuido"
+        elif temp == ACORDESAUM:
+            tipo = "aumentado"
+
+        
+        print("Acorde de ",nota," : ",resultado, "| ",tipo)
 
 
 if __name__ == "__main__":
@@ -76,10 +78,4 @@ if __name__ == "__main__":
     res = calculoEscala(nota)
     print("Las notas en la escala de ",nota," son: ",res)
     print("===== Acordes mayores =====")
-    calculoAcordesMayores(res)
-    print("===== Acordes menores =====")
-    calculoAcordesMenores(res)
-    print("===== Acordes disminuidos =====")
-    calculoAcordesDisminuidas(res)
-    print("===== Acordes aumentados =====")
-    calculoAcordesAumentados(res)
+    calculoAcordes(res)
